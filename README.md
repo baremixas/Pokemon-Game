@@ -1,6 +1,6 @@
-# NEAT-Pong
+# Pokemon-Game
  
-The game was created in Python and was made to learn and practice basic programming skills by me.
+The game was created in Python and was made to learn and practice basic programming skills.
 
 ## Table of contents
 * [General info](#general-info)
