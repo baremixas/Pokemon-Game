@@ -19,9 +19,8 @@ I haven't yet decided if the script will be running on a web page or as a standa
 
 The game is yet in super-early stage.
 
-In next update I plan to add file containing pokemon moves.
-
-Later, next to damage from skills, there will be added statuses such as paralysis or burn.
+In next update I plan to add more pokemon moves, statuses such as paralysis or burn and implement their usage.
+For the moment I added some skills and statuses, but they need more work to work properly.
 
 In the end I will be working on combining all the features and making small interface for user to play the game.
 
