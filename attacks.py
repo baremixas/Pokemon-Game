@@ -4,13 +4,14 @@ from functions import *
 from status import *
 
 
-class Tackle:
-    def __init__(self):
-        self.type = 'Normal'
-        self.category = 'Physical'
-        self.power = 40
-        self.accuracy = 100
-        self.PP = 35
+class PhysicalAttack:
+    def __init__(self, type, power, accuracy, pp, priority, category='Physical'):
+        self.type = type
+        self.category = category
+        self.power = power
+        self.accuracy = accuracy
+        self.pp = pp
+        self.priority = priority
 
         self.critical = 1
         self.random = 1
@@ -21,43 +22,14 @@ class Tackle:
         return self.damage
 
 
-class Growl:
-    def __init__(self):
-        self.type = 'Normal'
-        self.category = 'Status'
-        self.power = 0
-        self.accuracy = 100
-        self.PP = 40
-        self.priority = 0
-
-    def effect_status(self, target):
-        target.A_stage -= 1
-
-
-class Scratch:
-    def __init__(self):
-        self.type = 'Normal'
-        self.category = 'Physical'
-        self.power = 40
-        self.accuracy = 100
-        self.PP = 35
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect_damage(self, user, target):
-        self.damage = physical_damage(user, target, self)
-        return self.damage
-
-
-class Ember:
-    def __init__(self):
-        self.type = 'Fire'
-        self.category = 'Special'
-        self.power = 40
-        self.accuracy = 100
-        self.PP = 25
+class SpecialAttack:
+    def __init__(self, type, power, accuracy, pp, priority, category='Special'):
+        self.type = type
+        self.category = category
+        self.power = power
+        self.accuracy = accuracy
+        self.pp = pp
+        self.priority = priority
 
         self.critical = 1
         self.random = 1
@@ -68,54 +40,58 @@ class Ember:
         return self.damage
 
 
-class Smokescreen:
+class StatusAttack:
+    def __init__(self, accuracy, pp, priority, type, category='Status'):
+        self.type = type
+        self.category = category
+        self.accuracy = accuracy
+        self.pp = pp
+        self.priority = priority
+
+
+class Tackle(PhysicalAttack):
     def __init__(self):
-        self.type = 'Normal'
-        self.category = 'Status'
-        self.power = 0
-        self.accuracy = 100
-        self.PP = 20
-        self.priority = 0
+        super().__init__('Normal', 40, 100, 35, 0)
+
+
+class Growl(StatusAttack):
+    def __init__(self):
+        super().__init__('Normal', 100, 40, 0)
+
+    def effect_status(self, target):
+        target.A_stage -= 1
+
+
+class Scratch(PhysicalAttack):
+    def __init__(self):
+        super().__init__('Normal', 40, 100, 35, 0)
+
+
+class Ember(SpecialAttack):
+    def __init__(self):
+        super().__init__('Fire', 40, 100, 25, 0)
+
+
+class Smokescreen(StatusAttack):
+    def __init__(self):
+        super().__init__('Normal', 100, 20, 0)
+
     def effect_status(self, target):
         target.Accuracy_stage -= 1
 
 
-class Dragon_Breath:
+class Dragon_Breath(SpecialAttack):
     def __init__(self):
-        self.type = 'Dragon'
-        self.category = 'Special'
-        self.power = 60
-        self.accuracy = 100
-        self.PP = 20
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect_damage(self,user,target):
-        self.damage = special_damage(user,target,self)
-        return self.damage
+        super().__init__('Dragon', 60, 100, 20, 0)
 
     def effect_status(self, user, target):
         if random.choice([False, False, False, False, False, False, False, True, True, True]):
             target.status.append(Paralysis)
 
 
-class Fire_Fang:
+class Fire_Fang(PhysicalAttack):
     def __init__(self):
-        self.type = 'Fire'
-        self.category = 'Physical'
-        self.power = 65
-        self.accuracy = 95
-        self.PP = 15
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect_damage(self, user, target):
-        self.damage = physical_damage(user, target, self)
-        return self.damage
+        super().__init__('Fire', 65, 95, 15, 0)
 
     def effect_status(self):
         # If move before other move, it has 10% to flinch opponent
@@ -124,99 +100,34 @@ class Fire_Fang:
         return self.flinch, self.burn
 
 
-class Slash:
+class Slash(PhysicalAttack):
     def __init__(self):
-        self.type = 'Normal'
-        self.category = 'Physical'
-        self.power = 70
-        self.accuracy = 100
-        self.PP = 20
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect(self, user, target):
-        self.damage = physical_damage(user, target, self)
-        return self.damage
+        super().__init__('Normal', 70, 100, 20, 0)
 
 
-class Flamethrower:
+class Flamethrower(SpecialAttack):
     def __init__(self):
-        self.type = 'Fire'
-        self.category = 'Special'
-        self.power = 90
-        self.accuracy = 100
-        self.PP = 15
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect(self, user, target):
-        self.damage = special_damage(user, target, self)
-        return self.damage
+        super().__init__('Fire', 90, 100, 15, 0)
 
 
-class Scary_Face:
+class Scary_Face(StatusAttack):
     def __init__(self):
-        self.type = 'Normal'
-        self.category = 'Status'
-        self.power = 0
-        self.accuracy = 100
-        self.PP = 10
-        self.priority = 0
+        super().__init__('Normal', 100, 10, 0)
 
     def effect(self, target):
         target.Speed_stage -= 2
 
 
-class Fire_Spin:
+class Fire_Spin(SpecialAttack):
     def __init__(self):
-        self.type = 'Fire'
-        self.category = 'Special'
-        self.power = 35
-        self.accuracy = 85
-        self.PP = 15
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect(self, user, target):
-        self.damage = special_damage(user, target, self)
-        return self.damage
+        super().__init__('Fire', 35, 85, 15, 0)
 
 
-class Inferno:
+class Inferno(SpecialAttack):
     def __init__(self):
-        self.type = 'Fire'
-        self.category = 'Special'
-        self.power = 100
-        self.accuracy = 50
-        self.PP = 5
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect(self,user,target):
-        self.damage = special_damage(user, target, self)
-        return self.damage
+        super().__init__('Fire', 100, 50, 5, 0)
 
 
-class Flare_Blitz:
+class Flare_Blitz(PhysicalAttack):
     def __init__(self):
-        self.type = 'Fire'
-        self.category = 'Physical'
-        self.power = 120
-        self.accuracy = 100
-        self.PP = 15
-
-        self.critical = 1
-        self.random = 1
-        self.weather = 1
-
-    def effect(self, user, target):
-        self.damage = physical_damage(user, target, self)
-        return self.damage
+        super().__init__('Fire', 120, 100, 15, 0)
